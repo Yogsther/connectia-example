@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Connectia Example</title>
+    <script src="https://connectia.ygstr.com/client/Connectia.js"></script>
+</head>
+<body>
+    
+    <div id="wall"></div>
+    
+    Upload a post:
+    <input type="text" placeholder="Username" id="username">
+    <input type="text" placeholder="Message" id="message">
+    <button onclick="sendPost()">Upload post</button>
+    
+    <script>
+    var con = new Connectia("http://localhost");
+
+    // Insert posts
+    con.on("posts", posts  => {
+        // Loop through the posts
+        for(post of posts){
+            // Insert post into DOM
+            document.getElementById("wall").innerHTML += `${post.username}: ${post.message}<br>`
+        }
+    })
+
+    // Tell the server you want all posts
+    con.emit("get_posts");
+    
+    // Submit post function
+    function sendPost(){
+        var post = {
+            // Get the username and message from the inputs
+            username: document.getElementById("username").value,
+            message: document.getElementById("message").value
+        }
+        // Send the post to the server
+        con.emit("post", post);
+    }
+    
+    </script>
+</body>
+</html>
